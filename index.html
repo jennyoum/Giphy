@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Giphy</title>
+</head>
+<body>
+    <div id="buttons">
+        <button data-food="burger">Burgers</button>
+        <button data-food="steak">Steak</button>
+        <button data-food="burrito">Burritos</button>
+        <button data-food="taco">Tacos</button>
+        <button data-food="pasta">Pastas</button>
+    </div>
+
+    <div id="gifs-appear-here">
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    $("button").on("click", function() {
+      var food = $(this).attr("data-food");
+      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        food + "&api_key=6kzr50l8dlgEaOOVqe1VMiOwUmuGt3p6&limit=10";
+
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      })
+        .then(function(response) {
+          var results = response.data;
+
+          for (var i = 0; i < results.length; i++) {
+            var gifDiv = $("<div>");
+
+            var rating = results[i].rating;
+
+            var p = $("<p>").text("Rating: " + rating);
+
+            var foodImage = $("<img>");
+            foodImage.attr("src", results[i].images.fixed_height.url);
+
+            gifDiv.prepend(p);
+            gifDiv.prepend(foodImage);
+
+            $("#gifs-appear-here").prepend(gifDiv);
+          }
+
+          
+
+          $(".gif").on("click", function() {
+            var state = $(this).attr("data-state");
+            if (state === "still") {
+            $(this).attr("src", $(this).attr("data-animate"));
+            $(this).attr("data-state", "animate");
+            } 
+            else {
+            $(this).attr("src", $(this).attr("data-still"));
+            $(this).attr("data-state", "still");
+            }
+        });
+    });
+  </script>
+</body>
+</html>
