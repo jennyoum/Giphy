@@ -7,24 +7,44 @@
     <title>Giphy</title>
 </head>
 <body>
-    <div id="buttons">
-        <button data-food="burger">Burgers</button>
+   
+        <button data-food="burger">Burger</button>
         <button data-food="steak">Steak</button>
-        <button data-food="burrito">Burritos</button>
-        <button data-food="taco">Tacos</button>
-        <button data-food="pasta">Pastas</button>
-    </div>
+        <button data-food="burrito">Burrito</button>
+        <button data-food="pizza">Pizza</button>
+        <button data-food="taco">Taco</button>
+ 
 
     <div id="gifs-appear-here">
     </div>
-
+    <div id="topics"></div>
+    <button>Add Food: </button>
+    <input type="text" id="userInput">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript">
+
+  var topics = [];
+
+//   1. get the value form the <input>, “hit: use .val();”
+// 2. after get the<input> value, add it into the topics[]
+// 3. onclick call foodbuttons();
+// 4. make the button functional add attr data-food to each button
+
+  $("#userInput").val("")
+  
+  function foodButtons () {
+    for (var i = 0; i < topics.length; i++) {
+    document.getElementById("topics").innerHTML += "<button>" + topics[i] + "</button>";
+        }
+    }
+    foodButtons();
+    
     $("button").on("click", function() {
       var food = $(this).attr("data-food");
-      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-        food + "&api_key=6kzr50l8dlgEaOOVqe1VMiOwUmuGt3p6&limit=10";
-
+      var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=6kzr50l8dlgEaOOVqe1VMiOwUmuGt3p6&q=" 
+      + food + "&limit=10&offset=0&lang=en";
+    
       $.ajax({
         url: queryURL,
         method: "GET"
@@ -39,27 +59,32 @@
 
             var p = $("<p>").text("Rating: " + rating);
 
-            var foodImage = $("<img>");
-            foodImage.attr("src", results[i].images.fixed_height.url);
+            
 
             gifDiv.prepend(p);
-            gifDiv.prepend(foodImage);
+            gifDiv.prepend(`<img src = "${results[i].images.downsized_still.url}" 
+                    data-still="${results[i].images.downsized_still.url}" 
+                    data-animate="${results[i].images.downsized.url} " data-state="still" class = "gif ">`);
 
             $("#gifs-appear-here").prepend(gifDiv);
           }
-
           
+            $("#gifs-appear-here").on("click",".gif", function(){
+                    //debugger;
+                    var state = $(this).attr("data-state");
 
-          $(".gif").on("click", function() {
-            var state = $(this).attr("data-state");
-            if (state === "still") {
-            $(this).attr("src", $(this).attr("data-animate"));
-            $(this).attr("data-state", "animate");
-            } 
-            else {
-            $(this).attr("src", $(this).attr("data-still"));
-            $(this).attr("data-state", "still");
-            }
+                    if(state == "still"){
+                        var animateImgAddress = $(this).attr("data-animate");
+                            $(this).attr("src", animateImgAddress);
+                            $(this).attr("data-state”,“animate");
+                        }else{
+                        var animateImgAddress = $(this).attr("data-still");
+                            $(this).attr("src", animateImgAddress);
+                            $(this).attr("data-state","still");
+                        }
+                   
+    
+            });
         });
     });
   </script>
