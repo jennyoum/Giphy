@@ -22,22 +22,15 @@
     <input type="text" id="userInput">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script type="text/javascript">
+    <script type="text/javascript">
 
-  var topics = [];
-
-//   1. get the value form the <input>, “hit: use .val();”
-// 2. after get the<input> value, add it into the topics[]
-// 3. onclick call foodbuttons();
-// 4. make the button functional add attr data-food to each button
-
-  $("#userInput").val("")
+    var topics = [];
   
-  function foodButtons () {
-    for (var i = 0; i < topics.length; i++) {
-    document.getElementById("topics").innerHTML += "<button>" + topics[i] + "</button>";
+    function foodButtons () {
+        for (var i = 0; i < topics.length; i++) {
+        document.getElementById("topics").innerHTML += "<button>" + topics[i] + "</button>";
+            }
         }
-    }
     foodButtons();
     
     $("button").on("click", function() {
@@ -58,8 +51,19 @@
             var rating = results[i].rating;
 
             var p = $("<p>").text("Rating: " + rating);
+            //   1. get the value form the <input>, “hit: use .val();”
+            // 2. after get the<input> value, add it into the topics[]
+            // 3. onclick call foodbuttons();
+            // 4. make the button functional add attr data-food to each button
 
-            
+            $("#userInput").val("")
+            var userInput = document.getElementById("userInput").value;
+            topics.push(userInput);
+            var inputValue = "";
+            for (i = 0; i<topics.length; i++){
+                inputValue = inputValue + topics[i];
+                document.getElementById("userInput").innerHTML = inputValue;
+            };
 
             gifDiv.prepend(p);
             gifDiv.prepend(`<img src = "${results[i].images.downsized_still.url}" 
@@ -67,23 +71,21 @@
                     data-animate="${results[i].images.downsized.url} " data-state="still" class = "gif ">`);
 
             $("#gifs-appear-here").prepend(gifDiv);
-          }
+                }
           
             $("#gifs-appear-here").on("click",".gif", function(){
-                    //debugger;
-                    var state = $(this).attr("data-state");
-
-                    if(state == "still"){
-                        var animateImgAddress = $(this).attr("data-animate");
-                            $(this).attr("src", animateImgAddress);
-                            $(this).attr("data-state”,“animate");
-                        }else{
-                        var animateImgAddress = $(this).attr("data-still");
-                            $(this).attr("src", animateImgAddress);
-                            $(this).attr("data-state","still");
-                        }
                    
-    
+                var state = $(this).attr("data-state");
+
+                if(state == "still"){
+                    var animateImgAddress = $(this).attr("data-animate");
+                        $(this).attr("src", animateImgAddress);
+                        $(this).attr("data-state”,“animate");
+                    }else{
+                    var animateImgAddress = $(this).attr("data-still");
+                        $(this).attr("src", animateImgAddress);
+                        $(this).attr("data-state","still");
+                    }
             });
         });
     });
