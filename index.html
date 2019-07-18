@@ -7,34 +7,45 @@
     <title>Giphy</title>
 </head>
 <body>
-   
-        <button data-food="burger">Burger</button>
-        <button data-food="steak">Steak</button>
-        <button data-food="burrito">Burrito</button>
-        <button data-food="pizza">Pizza</button>
-        <button data-food="taco">Taco</button>
- 
+   <div id="btn-div">
+        <!-- <button data-food="burger" class="query-btn">Burger</button>
+        <button data-food="steak" class="query-btn">Steak</button>
+        <button data-food="burrito" class="query-btn">Burrito</button>
+        <button data-food="pizza" class="query-btn">Pizza</button>
+        <button data-food="taco" class="query-btn">Taco</button> -->
+   </div>
+    <div id="topics"></div>
+    <button id="add-food" >Add Food: </button>
+    <input type="text" id="userInput">
 
     <div id="gifs-appear-here">
     </div>
-    <div id="topics"></div>
-    <button>Add Food: </button>
-    <input type="text" id="userInput">
+   
+    
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
 
-    var topics = [];
+    var topics = ["burger", "steak", "burrito", "pizza", "taco"];
   
-    function foodButtons () {
-        for (var i = 0; i < topics.length; i++) {
-        document.getElementById("topics").innerHTML += "<button>" + topics[i] + "</button>";
-            }
+    function foodButtons (a) {
+        //let i = a.length;
+        console.log(i);
+       $("#btn-div").prepend(`<button class="query-btn" data-food ="${a}"> ${a}</button>`) ;
+       //$("#topics").prepend(`<button  data-food ="a[0]">a[0]</button>`) ;
         }
-    foodButtons();
-    
-    $("button").on("click", function() {
+       for ( var i=0; i < topics.length; i++){
+            foodButtons(topics[i]);
+        } 
+        $("#add-food").on("click",function(){
+                var userInput =$("#userInput").val();
+                console.log(userInput);
+                //topics.push(userInput);
+                foodButtons(userInput);
+            });
+    $("#btn-div").on("click", ".query-btn", function() {
       var food = $(this).attr("data-food");
+      console.log(food);
       var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=6kzr50l8dlgEaOOVqe1VMiOwUmuGt3p6&q=" 
       + food + "&limit=10&offset=0&lang=en";
     
@@ -51,20 +62,19 @@
             var rating = results[i].rating;
 
             var p = $("<p>").text("Rating: " + rating);
-            //   1. get the value form the <input>, “hit: use .val();”
+            // 1. get the value form the <input>, “hit: use .val();”
             // 2. after get the<input> value, add it into the topics[]
             // 3. onclick call foodbuttons();
             // 4. make the button functional add attr data-food to each button
 
-            // $("#userInput").val("")
-            // var userInput = document.getElementById("userInput").value;
-            // topics.push(userInput);
-            // var inputValue = "";
+            
+           
+            //var inputValue = "";
             // for (i = 0; i<topics.length; i++){
             //     inputValue = inputValue + topics[i];
             //     document.getElementById("userInput").innerHTML = inputValue;
             // };
-
+            
             gifDiv.prepend(p);
             gifDiv.prepend(`<img src = "${results[i].images.downsized_still.url}" 
                     data-still="${results[i].images.downsized_still.url}" 
@@ -78,10 +88,12 @@
                 var state = $(this).attr("data-state");
 
                 if(state == "still"){
+                    console.log("still");
                     var animateImgAddress = $(this).attr("data-animate");
                         $(this).attr("src", animateImgAddress);
-                        $(this).attr("data-state”,“animate");
+                        $(this).attr("data-state","animate");
                     }else{
+                    console.log("animate")
                     var animateImgAddress = $(this).attr("data-still");
                         $(this).attr("src", animateImgAddress);
                         $(this).attr("data-state","still");
